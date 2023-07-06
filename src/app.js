@@ -2,9 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const cookRoutes = require('./routes/cook');
-const customerRoutes = require('./routes/customer');
-const dishesRoutes = require('./routes/cook');
+const userRoutes = require('./routes/user');
+const cartRoutes = require('./routes/cart');
+const dishesRoutes = require('./routes/user');
 const orderRoutes = require('./routes/order');
 
 const app = express();
