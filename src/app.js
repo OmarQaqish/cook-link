@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const connectToMongo = require('./db/connection');
 require('dotenv').config();
 
 const userRoutes = require('./routes/user');
@@ -14,9 +15,11 @@ app.use(bodyParser.json());
 
 // app.use('/api/user', userRoutes);
 // app.use('/api/cart', cartRoutes);
-// app.use('/api/dishe', dishesRoutes);
+// app.use('/api/dish', dishesRoutes);
 // app.use('/api/order', orderRoutes);
 
 app.listen(process.env.NODE_LOCAL_PORT, () => {
   console.log(`server listening on port:${process.env.NODE_LOCAL_PORT}`);
+
+  connectToMongo();
 });
