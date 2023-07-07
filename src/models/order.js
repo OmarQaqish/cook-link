@@ -40,3 +40,7 @@ orderSchema.pre('save', function (next) {
   this.totalPrice = totalPrice;
   next();
 });
+
+const Order = mongoose.model('Order', orderSchema);
+
+module.exports = Order;
