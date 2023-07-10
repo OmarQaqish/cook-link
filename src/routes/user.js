@@ -7,10 +7,10 @@ const router = express.Router();
 // router.put('/profile/:id', userController.updateUserProfile);
 
 // handling user registration
-// router.get('/signin', userController.loginUser);
+// router.get('/signin', userController.renderLoginUser);
 // router.post('/signin', userController.loginUser);
 
-// router.get('/signup', userController.createUser);
+// router.get('/signup', userController.renderSignupUser);
 // router.post('/signup', userController.createUser);
 
 // router.get('/signout', userController.logoutUser);
