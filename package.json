@@ -21,7 +21,6 @@
     "express": "^4.17.2",
     "mongoose": "^7.3.2",
     "slugify": "^1.6.6",
-    "yarn-upgrade-all": "^0.6.1"
   },
   "devDependencies": {
     "eslint": "^8.7.0",
