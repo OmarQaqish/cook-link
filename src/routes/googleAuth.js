@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('../services/passport');
 const googleAuthController = require('../controllers/googleAuth');
 
-const router = express.Router;
+const router = express.Router();
 
 router.get(
   '/google',

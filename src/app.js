@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 // app.use('/api/cart', cartRoutes);
 // app.use('/api/dish', dishesRoutes);
 // app.use('/api/order', orderRoutes);
-app.use('/api/auth/google', googleAuthRoutes);
+app.use('/api/auth', googleAuthRoutes);
 
 app.listen(process.env.NODE_LOCAL_PORT, () => {
   console.log(`server listening on port:${process.env.NODE_LOCAL_PORT}`);
