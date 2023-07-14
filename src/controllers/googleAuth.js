@@ -24,17 +24,21 @@ async function googleCallback(req, res, next) {
     }
 
     try {
-      const user = await User.findOne({ providerId: profile.id });
+      let user = await User.findOne({ providerId: profile.id });
 
       if (!user) {
-        const newUser = new User({
+        const profilePicture =
+          profile.photos && profile.photos.length > 0
+            ? profile.photos[0].value
+            : null;
+        user = new User({
           username: profile.displayName,
           email: profile.emails[0].value,
           provider: 'google',
           providerId: profile.id,
-          type: 'user',
+          profilePicture,
         });
-        await newUser.save();
+        await user.save();
       }
 
       const token = generateToken(user);
