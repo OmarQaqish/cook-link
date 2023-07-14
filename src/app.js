@@ -13,7 +13,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.use('/api/user', userRoutes);
+app.use('/api/user', userRoutes);
 // app.use('/api/cart', cartRoutes);
 // app.use('/api/dish', dishesRoutes);
 // app.use('/api/order', orderRoutes);

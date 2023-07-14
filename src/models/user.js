@@ -1,6 +1,8 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -27,6 +29,7 @@ const userSchema = new mongoose.Schema({
     },
     minlength: 6,
   },
+  passwordChangedAt: Date,
   provider: {
     type: String,
   },
@@ -45,6 +48,7 @@ const userSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ['admin', 'cook', 'user'],
+    default: 'user',
   },
   isAdmin: {
     type: Boolean,
@@ -106,6 +110,31 @@ userSchema.pre('save', async function (next) {
     return next(error);
   }
 });
+
+userSchema.methods.generateAuthToken = function () {
+  const payload = {
+    id: this.id,
+    username: this.username,
+  };
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+  return token;
+};
+
+userSchema.methods.changedPasswordAfter = function (JWTTIMESTAMP) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return JWTTIMESTAMP < changedTimestamp;
+  }
+
+  // flase means password not changed
+  return false;
+};
 
 const User = mongoose.model('User', userSchema);
 
