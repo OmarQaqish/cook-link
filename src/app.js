@@ -3,10 +3,10 @@ const bodyParser = require('body-parser');
 const connectToMongo = require('./db/connection');
 require('dotenv').config();
 
-const userRoutes = require('./routes/user');
+// const userRoutes = require('./routes/user');
 const cartRoutes = require('./routes/cart');
-const dishesRoutes = require('./routes/dish');
-const orderRoutes = require('./routes/order');
+// const dishesRoutes = require('./routes/dish');
+// const orderRoutes = require('./routes/order');
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // app.use('/api/user', userRoutes);
-// app.use('/api/cart', cartRoutes);
+app.use('/api/cart', cartRoutes);
 // app.use('/api/dish', dishesRoutes);
 // app.use('/api/order', orderRoutes);
 
