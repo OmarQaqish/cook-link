@@ -22,8 +22,6 @@ router.get(
 // router.get('/signout', userController.logoutUser);
 // const userController = require('../controllers/user');
 
-const router = express.Router();
-
 // router.get('/profile/:id', userController.getUserProfile);
 // router.put('/profile/:id', userController.updateUserProfile);
 

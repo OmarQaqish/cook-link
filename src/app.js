@@ -11,7 +11,6 @@ const googleAuthRoutes = require('./routes/googleAuth');
 
 const addressRoutes = require('./routes/address');
 
-
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,7 +23,6 @@ app.use('/api/user', userRoutes);
 app.use('/api/auth', googleAuthRoutes);
 
 app.use('/api/address', addressRoutes);
-
 
 app.listen(process.env.NODE_LOCAL_PORT, () => {
   console.log(`server listening on port:${process.env.NODE_LOCAL_PORT}`);
