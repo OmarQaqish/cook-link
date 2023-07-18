@@ -122,20 +122,6 @@ userSchema.methods.generateAuthToken = function () {
   return token;
 };
 
-userSchema.methods.changedPasswordAfter = function (JWTTIMESTAMP) {
-  if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
-
-    return JWTTIMESTAMP < changedTimestamp;
-  }
-
-  // flase means password not changed
-  return false;
-};
-
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
