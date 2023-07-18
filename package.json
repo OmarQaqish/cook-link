@@ -24,6 +24,12 @@
     "mongoose": "^7.3.2",
     "slugify": "^1.6.6",
     "yarn-upgrade-all": "^0.6.1"
+    "mongoose": "^7.3.2",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+
+    "slugify": "^1.6.6"
+
   },
   "devDependencies": {
     "eslint": "^8.7.0",
