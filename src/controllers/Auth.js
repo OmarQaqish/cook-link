@@ -3,7 +3,9 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+
 // ********************************* SignIn controller
+
 const signIn = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -17,7 +19,9 @@ const signIn = async (req, res) => {
     }
 
     const token = user.generateAuthToken();
+
     res.cookie('jwt', token, { httpOnly: true });
+
     return res
       .status(201)
       .send({ JWTtoken: token, message: 'Logged in successfully' });
