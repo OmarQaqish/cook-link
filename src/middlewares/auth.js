@@ -7,7 +7,7 @@ const protectRoute = async (req, res, next) => {
   try {
     // 1.getting token and check if it's there
     const token = req.cookies.jwt;
-    
+
     if (!token) {
       return res.status(403).send({
         message: 'you are not logged in, please log in to get access',
@@ -30,7 +30,6 @@ const protectRoute = async (req, res, next) => {
     return res.status(500).send({ message: `Internal server error: ${err}` });
   }
 };
-
 
 // ********************************************** Authoraization ristrictTo controller
 
