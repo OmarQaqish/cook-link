@@ -17,5 +17,16 @@ router.get(
   AuthMiddleware.ristrictTo('admin'),
   userController.getAllUsers
 );
-
+router.put(
+  '/',
+  AuthMiddleware.protectRoute,
+  AuthMiddleware.ristrictTo('admin', 'user'),
+  userController.updateUserProfile
+);
+router.put(
+  '/cook/',
+  AuthMiddleware.protectRoute,
+  AuthMiddleware.ristrictTo('admin', 'cook'),
+  userController.updateCookProfile
+);
 module.exports = router;
