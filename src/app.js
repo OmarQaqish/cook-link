@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const connectToMongo = require('./db/connection');
 require('dotenv').config();
 
@@ -16,6 +17,8 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
+
 
 app.use('/api/cart', AuthMiddleware.protectRoute, cartRoutes);
 app.use('/api/user', userRoutes);

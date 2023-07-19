@@ -46,6 +46,8 @@ async function googleCallback(req, res, next) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const userId = decoded.id;
 
+      res.cookie('jwt', token, { httpOnly: true });
+
       return res.redirect(`/?id=${userId}`);
     } catch (error) {
       return res.status(500).json({ message: error.message });

@@ -3,7 +3,9 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-// ******************************************************************* SignIn controller
+
+// ********************************* SignIn controller
+
 const signIn = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -17,6 +19,8 @@ const signIn = async (req, res) => {
     }
 
     const token = user.generateAuthToken();
+
+    res.cookie('jwt', token, { httpOnly: true });
 
     return res
       .status(201)
@@ -107,7 +111,7 @@ const cookSignUp = async (req, res) => {
 
 const signOut = (req, res) => {
   try {
-    // implement Sign out
+    res.clearCookie('jwt'); // Clear the JWT cookie
     res.status(200).send({ message: 'Logged out successfully' });
   } catch (err) {
     res.status(500).send({ message: `failed to log out: ${err}` });
