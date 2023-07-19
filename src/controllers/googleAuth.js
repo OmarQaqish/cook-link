@@ -41,7 +41,7 @@ async function googleCallback(req, res, next) {
         await user.save();
       }
 
-      const token = User.generateAuthToken();
+      const token = user.generateAuthToken();
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const userId = decoded.id;
