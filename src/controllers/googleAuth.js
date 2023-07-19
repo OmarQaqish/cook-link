@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const User = require('../models/user');
-
+/*
 function generateToken(user) {
   const payload = {
     user: {
@@ -16,6 +16,7 @@ function generateToken(user) {
   };
   return jwt.sign(payload, process.env.JWT_SECRET, options);
 }
+*/
 
 async function googleCallback(req, res, next) {
   passport.authenticate('google', async (err, profile) => {
@@ -41,9 +42,10 @@ async function googleCallback(req, res, next) {
         await user.save();
       }
 
-      const token = generateToken(user);
-
-      return res.redirect(`/?token=${token}`);
+      const token = User.generateAuthToken();
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      res.cookie('jwt', token, { httpOnly: true });
+      return res.redirect(`/?id=${decoded.id}`);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }

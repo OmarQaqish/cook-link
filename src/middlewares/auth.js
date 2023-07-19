@@ -1,17 +1,11 @@
 /* eslint-disable prefer-destructuring */
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-// ******************************************************* Authentication protectRoute controller
+// *********************************** Authentication protectRoute controller
 const protectRoute = async (req, res, next) => {
   try {
     // 1.getting token and check if it's there
-    let token;
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
-    ) {
-      token = req.headers.authorization.split(' ')[1];
-    }
+    const token = req.cookies.jwt;
     if (!token) {
       return res.status(403).send({
         message: 'you are not logged in, please log in to get access',
@@ -35,7 +29,7 @@ const protectRoute = async (req, res, next) => {
   }
 };
 
-// ******************************************************* Authoraization ristrictTo controller
+// ********************************************** Authoraization ristrictTo controller
 const ristrictTo =
   (...type) =>
   (req, res, next) => {
