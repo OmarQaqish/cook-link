@@ -12,7 +12,10 @@ const getAddress = async (req, res) => {
 
     const user = await User.findById(userId);
     // Check if the user's address is the same one as the address in the request
-    if (!user.address || user.address.toString() !== addressId) {
+    if (
+      user.type !== 'admin' &&
+      (!user.address || user.address.toString() !== addressId)
+    ) {
       return res
         .status(403)
         .json({ error: 'You are not authorized to access this address' });
@@ -34,6 +37,11 @@ const getAllAddresses = async (req, res) => {
 
 const addAddress = async (req, res) => {
   try {
+    // With this check, the user is allowed to add an address only if they don't have one.
+    // If they delete the address, they can add an address again
+    if (req.user.address) {
+      return res.status(400).json({ message: 'You already have an address' });
+    }
     const {
       street,
       buildingNumber,
@@ -78,7 +86,10 @@ const updateAddress = async (req, res) => {
     }
 
     const user = await User.findById(userId);
-    if (!user.address || user.address.toString() !== addressId) {
+    if (
+      user.type !== 'admin' &&
+      (!user.address || user.address.toString() !== addressId)
+    ) {
       return res
         .status(403)
         .json({ error: 'You are not authorized to update this address' });
@@ -102,11 +113,6 @@ const updateAddress = async (req, res) => {
 
 const deleteAddress = async (req, res) => {
   try {
-    // const deletedAddress = await Address.findByIdAndDelete(req.params.id);
-    // if (!deletedAddress) {
-    //   return res.status(404).json({ error: 'Address not found' });
-    // }
-    // return res.status(200).json({ message: 'Address deleted successfully' });
     const userId = req.user.id;
     const addressId = req.params.id;
 
@@ -115,19 +121,26 @@ const deleteAddress = async (req, res) => {
     if (!address) {
       return res.status(404).json({ error: 'Address not found' });
     }
-
     const user = await User.findById(userId);
-    if (!user.address || user.address.toString() !== addressId) {
+    if (
+      user.type !== 'admin' &&
+      (!user.address || user.address.toString() !== addressId)
+    ) {
       return res
         .status(403)
         .json({ error: 'You are not authorized to delete this address' });
     }
 
-    // We delete the address from the user's document.
-    user.address = null;
-    await user.save();
+    // Find the user whose address we want to delete and set their address field to null
+    const updatedUser = await User.findOneAndUpdate(
+      { address: addressId },
+      { $set: { address: null } }
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found for this address' });
+    }
 
-    // Remove the address from the database.
+    // Remove the address from the database
     await Address.deleteOne({ _id: addressId });
     return res.status(200).json({ message: 'Address deleted successfully' });
   } catch (error) {
