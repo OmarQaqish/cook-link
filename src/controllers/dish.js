@@ -1,4 +1,5 @@
 const Dish = require('../models/dish');
+const User = require('../models/user');
 
 const getAllDishes = async (req, res) => {
   try {
@@ -12,6 +13,12 @@ const getAllDishes = async (req, res) => {
 const addDish = async (req, res) => {
   try {
     const { name, description, cuisine, image, price } = req.body;
+    const cookId = req.user.id;
+    if (!name) {
+      return res.status(401).json({
+        message: 'please add a dish name',
+      });
+    }
     const newDish = new Dish({
       name,
       description,
@@ -20,6 +27,9 @@ const addDish = async (req, res) => {
       price,
     });
     const savedDish = await newDish.save();
+
+    await User.findByIdAndUpdate(cookId, { $push: { dishes: savedDish.id } });
+
     return res.status(201).json(savedDish);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to add dish' });
@@ -51,13 +61,40 @@ const getOneDish = async (req, res) => {
 
 const updateDish = async (req, res) => {
   try {
-    const dish = await Dish.findByIdAndUpdate(req.params.id, req.body, {
+    const dishId = req.params.id;
+    const updateFields = req.body;
+    // Define the allowed fields that can be updated
+    const allowedFields = ['name', 'description', 'cuisine', 'image', 'price'];
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    const dish = await Dish.findById(dishId);
+
+    if (!dish) {
+      return res.status(404).json({ message: 'Dish not found' });
+    }
+    // Check if any of the fields in the request body are not allowed
+    const invalidFields = Object.keys(updateFields).filter(
+      (field) => !allowedFields.includes(field)
+    );
+    if (invalidFields.length > 0) {
+      return res.status(400).json({
+        message: `Invalid fields found: ${invalidFields.join(', ')}`,
+      });
+    }
+    // allow all admins and just the owner of the dishes to update
+    if (
+      user.type !== 'admin' &&
+      (!user.dishes || !user.dishes.includes(dishId))
+    ) {
+      return res.status(403).json({
+        error: 'You do not have permission to UPDATE this dish',
+      });
+    }
+
+    const updatedDish = await Dish.findByIdAndUpdate(dishId, updateFields, {
       new: true,
     });
-    if (!dish) {
-      return res.status(404).json({ error: 'Dish not found' });
-    }
-    return res.status(200).json(dish);
+    return res.status(200).json(updatedDish);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to update dish' });
   }
@@ -65,10 +102,25 @@ const updateDish = async (req, res) => {
 
 const removeDish = async (req, res) => {
   try {
-    const dish = await Dish.findByIdAndRemove(req.params.id);
+    const dishId = req.params.id;
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    const dish = await Dish.findById(dishId);
     if (!dish) {
-      return res.status(404).json({ error: 'Dish not found' });
+      return res.status(404).json({ message: 'Dish not found' });
     }
+
+    // allow all admins and just the owner of the dishes to delete
+    if (
+      user.type !== 'admin' &&
+      (!user.dishes || !user.dishes.includes(dishId))
+    ) {
+      return res.status(403).json({
+        error: 'You do not have permission to DELETE this dish',
+      });
+    }
+    await Dish.findByIdAndRemove(req.params.id);
+    await User.findByIdAndUpdate(userId, { $pull: { dishes: dishId } });
     return res.status(200).json({ message: 'Dish deleted successfully' });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to delete dish' });
