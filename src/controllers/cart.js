@@ -1,14 +1,21 @@
 const Cart = require('../models/cart');
 const Dish = require('../models/dish');
+const Order = require('../models/order');
+
+const calculateTotalPrice = (cart) => {
+  const totalPrice = cart.reduce(
+    (acc, cartItem) => acc + cartItem.dish.price * cartItem.quantity,
+    0
+  );
+  return totalPrice;
+};
 
 const getCart = async (req, res) => {
-  // calculateTotalPrice return in response
   const userId = req.user.id;
   try {
-    const cart = await Cart.find({ user: userId })
-      .populate(['dish'])
-      .select({ user: 0 });
-    return res.status(200).json(cart);
+    const cart = await Cart.find({ user: userId }).populate('dish');
+    const totalPrice = calculateTotalPrice(cart);
+    return res.status(200).json({ cart, totalPrice });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch cart' });
   }
@@ -106,11 +113,49 @@ const removeItemFromCart = async (req, res) => {
 
   try {
     await Cart.findOneAndDelete({ dish: dishId });
-    return res.status(200).json({ message: 'Öğe sepetten kaldırıldı' });
+    return res.status(200).json({ message: 'Item removed from the cart' });
   } catch (error) {
     return res
       .status(500)
-      .json({ message: 'Bir hata oluştu, öğe sepetten kaldırılamadı' });
+      .json({ message: 'Error: Item can not removed from the cart' });
+  }
+};
+
+const checkout = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const cart = await Cart.find({ user: userId })
+      .populate('dish')
+      .select({ user: 0 });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    if (cart.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    const order = new Order({
+      user: userId,
+      items: cart,
+      totalPrice: calculateTotalPrice(cart),
+      status: 'pending',
+    });
+
+    await order.save();
+
+    const first = await Cart.deleteMany({ user: userId });
+    console.log(first);
+
+    return res
+      .status(201)
+      .json({ message: 'Order placed successfully', order });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Internal server error: ${error.message}` });
   }
 };
 
@@ -120,4 +165,5 @@ module.exports = {
   increaseItemQuantity,
   decreaseItemQuantity,
   removeItemFromCart,
+  checkout,
 };
