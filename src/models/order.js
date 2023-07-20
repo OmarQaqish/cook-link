@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const orderItemSchema = new mongoose.Schema({
   dish: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Dish',
+    type: Object,
     required: true,
   },
   quantity: {
