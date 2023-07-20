@@ -3,7 +3,6 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-
 // ********************************* SignIn controller
 
 const signIn = async (req, res) => {
@@ -24,7 +23,7 @@ const signIn = async (req, res) => {
 
     return res
       .status(201)
-      .send({ JWTtoken: token, message: 'Logged in successfully' });
+      .send({ JWTtoken: token, message: 'Logged in successfully', user });
   } catch (err) {
     return res.status(501).send({ message: 'crapp internal server error' });
   }

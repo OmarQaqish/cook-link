@@ -70,10 +70,12 @@ const userSchema = new mongoose.Schema({
       return this.type === 'cook';
     },
   },
-  dishes: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Dish',
-  },
+  dishes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Dish',
+    },
+  ],
 });
 
 // Used slugify to sanitize username:
