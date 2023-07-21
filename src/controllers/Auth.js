@@ -30,7 +30,7 @@ const signIn = async (req, res) => {
       .status(201)
       .send({ JWTtoken: token, message: 'Logged in successfully', user });
   } catch (err) {
-    return res.status(501).send({ message: 'crap internal server error' });
+    return res.status(501).send({ message: 'internal server error' });
   }
 };
 
@@ -61,7 +61,7 @@ const signUp = async (req, res) => {
       .status(201)
       .send({ message: 'user created successfully', data: newUser });
   } catch (err) {
-    return res.status(501).send({ message: 'crap internal server error' });
+    return res.status(501).send({ message: 'internal server error' });
   }
 };
 // ******************************************************* cook signup
