@@ -11,7 +11,6 @@ router.post('/cook/signup', AuthController.cookSignUp);
 router.get('/signout', AuthController.signOut);
 // User Controllers Routes
 
-
 router.get(
   '/users',
   AuthMiddleware.protectRoute,
