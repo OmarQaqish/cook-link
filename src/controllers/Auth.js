@@ -8,13 +8,18 @@ const User = require('../models/user');
 const signIn = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
+    // Check if the user object returned from the database is not null before validating the password
+    // Since we're using the email to check, if the email is wrong, the object will be null.
+    if (!user) {
+      return res.status(400).send({ message: 'Wrong email or password' });
+    }
 
     const isValidPassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
-    if (!isValidPassword || !user) {
-      return res.status(400).send({ message: 'Wrong username or password' });
+    if (!isValidPassword) {
+      return res.status(400).send({ message: 'Wrong email or password' });
     }
 
     const token = user.generateAuthToken();
@@ -25,7 +30,7 @@ const signIn = async (req, res) => {
       .status(201)
       .send({ JWTtoken: token, message: 'Logged in successfully', user });
   } catch (err) {
-    return res.status(501).send({ message: 'crapp internal server error' });
+    return res.status(501).send({ message: 'crap internal server error' });
   }
 };
 
