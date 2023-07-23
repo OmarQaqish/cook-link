@@ -5,13 +5,19 @@ const AuthMiddleware = require('../middlewares/auth');
 
 const router = express.Router();
 
+router.get('/', dishController.getDishesToGuests);
 router.get(
-  '/admins',
+  '/admin',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('cook'),
+  AuthMiddleware.ristrictTo('admin'),
   dishController.getAllDishes
 );
-router.get('/', dishController.getDishesToGuests);
+router.get(
+  '/same-city',
+  AuthMiddleware.protectRoute,
+  AuthMiddleware.ristrictTo('user', 'cook'),
+  dishController.getDishesSameCity
+);
 router.get('/filter', dishController.filterDish);
 router.get(
   '/mydishes',

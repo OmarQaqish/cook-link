@@ -12,7 +12,26 @@ const getAllDishes = async (req, res) => {
 };
 const getDishesSameCity = async (req, res) => {
   try {
-    const dishes = await Dish.find();
+    const userId = req.user.id;
+    const user = await User.findById(userId).populate('address');
+    if (!user.address) {
+      return res.status(200).json({
+        message: 'Please Add your address to get dishes in your city',
+      });
+    }
+    const cooks = await User.find({
+      type: 'cook',
+    }).populate('address');
+    const dishesId = cooks
+      .filter((cook) => cook.address.city === user.address.city)
+      .map((cook) => cook.dishes)
+      .flat();
+    const dishes = await Dish.find({
+      _id: { $in: dishesId },
+    });
+    if (dishes.length === 0) {
+      return res.status(200).json({ message: 'No dishes in your city' });
+    }
     return res.status(200).json({ message: 'customer', dishes });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch dishes' });
