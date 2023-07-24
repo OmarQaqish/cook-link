@@ -1,0 +1,13 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CookLink API Documentation",
+    "version": "1.0.0",
+    "description": "API documentation for CookLink Capstone Project, by Fatma Zehra Aydın, Tareq Harh, and Omar Qaqish"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ]
+}

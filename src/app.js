@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./documentation/swagger.json');
 const connectToMongo = require('./db/connection');
 require('dotenv').config();
 
@@ -24,6 +26,7 @@ app.use('/api/order', orderRoutes);
 app.use('/api/dish', dishRoutes);
 app.use('/api/auth', googleAuthRoutes);
 app.use('/api/address', addressRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(process.env.NODE_LOCAL_PORT, () => {
   console.log(`server listening on port:${process.env.NODE_LOCAL_PORT}`);
