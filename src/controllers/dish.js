@@ -1,10 +1,46 @@
+/* eslint-disable no-else-return */
 const Dish = require('../models/dish');
 const User = require('../models/user');
 
 const getAllDishes = async (req, res) => {
   try {
     const dishes = await Dish.find();
-    return res.status(200).json(dishes);
+    return res.status(200).json({ message: 'admin', dishes });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch dishes' });
+  }
+};
+const getDishesSameCity = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).populate('address');
+    if (!user.address) {
+      return res.status(200).json({
+        message: 'Please Add your address to get dishes in your city',
+      });
+    }
+    const cooks = await User.find({
+      type: 'cook',
+    }).populate('address');
+    const dishesId = cooks
+      .filter((cook) => cook.address.city === user.address.city)
+      .map((cook) => cook.dishes)
+      .flat();
+    const dishes = await Dish.find({
+      _id: { $in: dishesId },
+    });
+    if (dishes.length === 0) {
+      return res.status(200).json({ message: 'No dishes in your city' });
+    }
+    return res.status(200).json({ message: 'customer', dishes });
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch dishes' });
+  }
+};
+const getDishesToGuests = async (req, res) => {
+  try {
+    const dishes = await Dish.find().sort({ createdAt: -1 }).limit(10);
+    return res.status(200).json({ message: 'guest', dishes });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch dishes' });
   }
@@ -119,19 +155,37 @@ const removeDish = async (req, res) => {
         error: 'You do not have permission to DELETE this dish',
       });
     }
+    const dishOwner = await User.findOne({ dishes: dishId });
     await Dish.findByIdAndRemove(req.params.id);
-    await User.findByIdAndUpdate(userId, { $pull: { dishes: dishId } });
+    await User.findByIdAndUpdate(dishOwner.id, { $pull: { dishes: dishId } });
     return res.status(200).json({ message: 'Dish deleted successfully' });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to delete dish' });
   }
 };
 
+const getMyDishes = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const cook = await User.findById(userId);
+    const dishIds = cook.dishes;
+    if (dishIds.length === 0) {
+      return res.status(200).json({ message: 'you  have no any dishes yet' });
+    }
+    const nyDishes = await Dish.find({ _id: { $in: dishIds } });
+    return res.status(200).json(nyDishes);
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch dishes' });
+  }
+};
 module.exports = {
   getAllDishes,
+  getDishesSameCity,
+  getDishesToGuests,
   addDish,
   filterDish,
   getOneDish,
   updateDish,
   removeDish,
+  getMyDishes,
 };
