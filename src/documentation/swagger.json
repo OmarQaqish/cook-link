@@ -9,5 +9,220 @@
     {
       "url": "http://localhost:3000"
     }
-  ]
+  ],
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6
+          },
+          "passwordChangedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "providerId": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profilePicture": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["admin", "cook", "user"],
+            "default": "user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "dishes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": ["username", "email"]
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string"
+          },
+          "buildingNumber": {
+            "type": "number"
+          },
+          "apartmentNumber": {
+            "type": "number"
+          },
+          "neighborhood": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "street",
+          "buildingNumber",
+          "apartmentNumber",
+          "neighborhood",
+          "district",
+          "city",
+          "postalCode"
+        ]
+      },
+      "Dish": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "cuisine": {
+            "type": "string",
+            "enum": ["Turkish", "Syrian", "Iraqi", "Other"]
+          },
+          "image": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["name", "description", "cuisine", "image", "price"]
+      },
+      "Cart": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dish": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          }
+        },
+        "required": ["user", "dish", "quantity"]
+      },
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "dish": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "cuisine": {
+                "type": "string",
+                "enum": ["Turkish", "Syrian", "Iraqi", "Other"]
+              },
+              "image": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              }
+            }
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "confirmed", "prepared"],
+            "default": "pending"
+          }
+        },
+        "required": ["dish", "quantity", "status"]
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "totalPrice": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["waiting", "paid", "delivered", "canceled"],
+            "default": "waiting"
+          }
+        },
+        "required": ["items", "totalPrice", "user", "status"]
+      }
+    }
+  }
 }
