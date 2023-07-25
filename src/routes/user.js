@@ -29,4 +29,8 @@ router.put(
   AuthMiddleware.ristrictTo('admin', 'cook'),
   userController.updateCookProfile
 );
+
+router.get('/', AuthMiddleware.protectRoute, userController.getMyInfo);
+router.get('/cook-page/:id', userController.getCookPage);
+router.delete('/', AuthMiddleware.protectRoute, userController.deleteMyAccount);
 module.exports = router;

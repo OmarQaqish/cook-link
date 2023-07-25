@@ -1,4 +1,9 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
+const Dish = require('../models/dish');
+const Address = require('../models/user');
+const Order = require('../models/order');
+const Cart = require('../models/cart');
 
 const getAllUsers = async (req, res) => {
   try {
@@ -9,6 +14,80 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getMyInfo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const UserInfo = await User.findById(userId, {
+      _id: 0,
+      password: 0,
+      createdAt: 0,
+      providerId: 0,
+      type: 0,
+      __v: 0,
+      dishes: 0,
+      isAdmin: 0,
+    }).populate('address', { _id: 0, __v: 0 });
+    res.status(200).send(UserInfo);
+  } catch (err) {
+    res.status(501).send({ message: `internal server error: ${err}` });
+  }
+};
+
+const getCookPage = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const cook = await User.findById(userId);
+    if (cook.type !== 'cook') {
+      return res.status(501).send({ message: 'can not get this page' });
+    }
+    const cookPage = await User.findById(userId, {
+      _id: 0,
+      password: 0,
+      createdAt: 0,
+      providerId: 0,
+      type: 0,
+      __v: 0,
+      isAdmin: 0,
+      username: 0,
+      email: 0,
+    })
+      .populate('dishes', {
+        _id: 0,
+        __v: 0,
+        createdAt: 0,
+      })
+      .populate('address', {
+        _id: 0,
+        __v: 0,
+      });
+    return res.status(200).send(cookPage);
+  } catch (err) {
+    return res.status(501).send({ message: `internal server error: ${err}` });
+  }
+};
+
+const deleteMyAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId)
+      .populate('address')
+      .populate('dishes');
+    if (user.address) {
+      await Address.findByIdAndDelete(user.address.id);
+    }
+    await Dish.deleteMany({ _id: { $in: user.dishes } });
+    await Order.deleteMany({
+      user: new mongoose.Types.ObjectId(userId),
+    });
+    await Cart.deleteMany({
+      user: new mongoose.Types.ObjectId(userId),
+    });
+    await User.findByIdAndDelete(userId);
+    res.status(200).send('account deleted successfully');
+  } catch (err) {
+    res.status(501).send({ message: `internal server error: ${err}` });
+  }
+};
 const updateUserProfile = async (req, res) => {
   try {
     const {
@@ -93,4 +172,7 @@ module.exports = {
   getAllUsers,
   updateUserProfile,
   updateCookProfile,
+  getMyInfo,
+  getCookPage,
+  deleteMyAccount,
 };
