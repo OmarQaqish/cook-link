@@ -141,13 +141,9 @@ const checkout = async (req, res) => {
       user: userId,
       items: cart,
       totalPrice: calculateTotalPrice(cart),
-      status: 'pending',
     });
 
     await order.save();
-
-    const first = await Cart.deleteMany({ user: userId });
-    console.log(first);
 
     return res
       .status(201)

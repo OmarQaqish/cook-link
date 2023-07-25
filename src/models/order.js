@@ -11,6 +11,12 @@ const orderItemSchema = new mongoose.Schema({
     min: [1, 'Quantity must be at least 1'],
     max: [10, 'Quantity cannot exceed 10'],
   },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'prepared'],
+    default: 'pending',
+    required: true,
+  },
 });
 
 const orderSchema = new mongoose.Schema({
@@ -23,9 +29,15 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'delivered'],
+    enum: ['waiting', 'paid', 'delivered', 'canceled'],
+    default: 'waiting',
     required: true,
   },
 });

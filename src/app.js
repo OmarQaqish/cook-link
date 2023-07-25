@@ -20,7 +20,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use('/api/cart', AuthMiddleware.protectRoute, cartRoutes);
+app.use(
+  '/api/cart',
+  AuthMiddleware.protectRoute,
+  AuthMiddleware.ristrictTo('user'),
+  cartRoutes
+);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/dish', dishRoutes);
