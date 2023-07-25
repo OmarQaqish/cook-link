@@ -50,10 +50,6 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'cook', 'user'],
     default: 'user',
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
   createdAt: {
     type: Date,
     default: Date.now,
