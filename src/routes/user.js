@@ -11,7 +11,6 @@ router.post('/cook/signup', AuthController.cookSignUp);
 router.get('/signout', AuthController.signOut);
 // User Controllers Routes
 
-
 router.get(
   '/users',
   AuthMiddleware.protectRoute,
@@ -30,4 +29,8 @@ router.put(
   AuthMiddleware.ristrictTo('admin', 'cook'),
   userController.updateCookProfile
 );
+
+router.get('/', AuthMiddleware.protectRoute, userController.getMyInfo);
+router.get('/cook-page/:id', userController.getCookPage);
+router.delete('/', AuthMiddleware.protectRoute, userController.DeleteMyAccount);
 module.exports = router;
