@@ -45,6 +45,8 @@ const getCookPage = async (req, res) => {
       type: 0,
       __v: 0,
       isAdmin: 0,
+      username: 0,
+      email: 0,
     })
       .populate('dishes', {
         _id: 0,
