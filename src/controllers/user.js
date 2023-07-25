@@ -1,6 +1,9 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 const Dish = require('../models/dish');
 const Address = require('../models/user');
+const Order = require('../models/order');
+const Cart = require('../models/cart');
 
 const getAllUsers = async (req, res) => {
   try {
@@ -63,16 +66,24 @@ const getCookPage = async (req, res) => {
   }
 };
 
-const DeleteMyAccount = async (req, res) => {
+const deleteMyAccount = async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId)
       .populate('address')
       .populate('dishes');
-    await Address.findByIdAndDelete(user.address.id);
+    if (user.address) {
+      await Address.findByIdAndDelete(user.address.id);
+    }
     await Dish.deleteMany({ _id: { $in: user.dishes } });
+    await Order.deleteMany({
+      user: new mongoose.Types.ObjectId(userId),
+    });
+    await Cart.deleteMany({
+      user: new mongoose.Types.ObjectId(userId),
+    });
     await User.findByIdAndDelete(userId);
-    res.status(200).send(user);
+    res.status(200).send('account deleted successfully');
   } catch (err) {
     res.status(501).send({ message: `internal server error: ${err}` });
   }
@@ -163,5 +174,5 @@ module.exports = {
   updateCookProfile,
   getMyInfo,
   getCookPage,
-  DeleteMyAccount,
+  deleteMyAccount,
 };

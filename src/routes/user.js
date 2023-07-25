@@ -32,5 +32,5 @@ router.put(
 
 router.get('/', AuthMiddleware.protectRoute, userController.getMyInfo);
 router.get('/cook-page/:id', userController.getCookPage);
-router.delete('/', AuthMiddleware.protectRoute, userController.DeleteMyAccount);
+router.delete('/', AuthMiddleware.protectRoute, userController.deleteMyAccount);
 module.exports = router;
