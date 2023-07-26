@@ -11,6 +11,25 @@
     }
   ],
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "GoogleOAuth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://localhost:3000/api/auth/google",
+            "tokenUrl": "https://accounts.google.com/o/oauth2/token",
+            "scopes": {
+              "https://www.googleapis.com/auth/userinfo.profile": "All user operations requiring authentication."
+            }
+          }
+        }
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
@@ -222,6 +241,351 @@
           }
         },
         "required": ["items", "totalPrice", "user", "status"]
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/signin": {
+      "post": {
+        "summary": "Sign in to the application",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "description": "Sign-in credentials",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email address"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User's password"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success - Successfully signed in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "JWTtoken": {
+                      "type": "string",
+                      "description": "Access token to be used for authenticated requests"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Success message"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "summary": "Sign up for a new user account",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "description": "User's registration details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "Username for the new user"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "description": "First name of the new user"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "description": "Last name of the new user"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email address for the new user"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password for the new user"
+                  },
+                  "password2": {
+                    "type": "string",
+                    "description": "Confirm password for the new user"
+                  }
+                },
+                "required": ["username", "email", "password", "password2"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User",
+                      "description": "The newly created user object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/cook/signup": {
+      "post": {
+        "summary": "Sign up for a new cook account",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "description": "Cook's registration details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "Username for the new cook"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "description": "First name of the new cook"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "description": "Last name of the new cook"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email address for the new cook"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Password for the new cook"
+                  },
+                  "password2": {
+                    "type": "string",
+                    "description": "Confirm password for the new cook"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "Location of the new cook"
+                  },
+                  "bio": {
+                    "type": "string",
+                    "description": "Bio of the new cook"
+                  }
+                },
+                "required": [
+                  "username",
+                  "email",
+                  "password",
+                  "password2",
+                  "location",
+                  "bio"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "responses": {
+            "201": {
+              "description": "Cook created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "description": "Success message"
+                      },
+                      "newCook": {
+                        "$ref": "#/components/schemas/User",
+                        "description": "The newly created cook object"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request - Invalid data provided",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "description": "Error message"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/signout": {
+      "get": {
+        "summary": "Sign out from the application",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": {
+            "description": "Successfully signed out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
