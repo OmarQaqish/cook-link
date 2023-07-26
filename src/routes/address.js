@@ -9,7 +9,7 @@ router.get('/:id', authMiddleware.protectRoute, addressController.getAddress);
 router.get(
   '/',
   authMiddleware.protectRoute,
-  authMiddleware.ristrictTo('admin'),
+  authMiddleware.restrictTo('admin'),
   addressController.getAllAddresses
 );
 router.put(

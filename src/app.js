@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(
   '/api/cart',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('user'),
+  AuthMiddleware.restrictTo('user'),
   cartRoutes
 );
 app.use('/api/user', userRoutes);

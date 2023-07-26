@@ -7,28 +7,28 @@ const router = express.Router();
 router.get(
   '/',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin'),
+  AuthMiddleware.restrictTo('admin'),
   orderController.getAllOrders
 );
 
 router.get(
   '/assigned-orders',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('cook'),
+  AuthMiddleware.restrictTo('cook'),
   orderController.getCookAssignedOrders
 );
 
 router.post(
   '/payment/:orderId',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('user'),
+  AuthMiddleware.restrictTo('user'),
   orderController.payment
 );
 
 router.put(
   '/:orderId',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin', 'cook'),
+  AuthMiddleware.restrictTo('admin', 'cook'),
   orderController.updateOrderStatus
 );
 

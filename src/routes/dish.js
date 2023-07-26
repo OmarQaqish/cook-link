@@ -9,39 +9,39 @@ router.get('/', dishController.getDishesToGuests);
 router.get(
   '/admin',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin'),
+  AuthMiddleware.restrictTo('admin'),
   dishController.getAllDishes
 );
 router.get(
   '/same-city',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('user', 'cook'),
+  AuthMiddleware.restrictTo('user', 'cook'),
   dishController.getDishesSameCity
 );
 router.get('/filter', dishController.filterDish);
 router.get(
   '/mydishes',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('cook'),
+  AuthMiddleware.restrictTo('cook'),
   dishController.getMyDishes
 );
 router.get('/:id', dishController.getOneDish);
 router.post(
   '/',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('cook'),
+  AuthMiddleware.restrictTo('cook'),
   dishController.addDish
 );
 router.put(
   '/:id',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin', 'cook'),
+  AuthMiddleware.restrictTo('admin', 'cook'),
   dishController.updateDish
 );
 router.delete(
   '/:id',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin', 'cook'),
+  AuthMiddleware.restrictTo('admin', 'cook'),
   dishController.removeDish
 );
 
