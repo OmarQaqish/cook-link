@@ -42,4 +42,4 @@ app.listen(process.env.NODE_LOCAL_PORT, () => {
   connectToMongo();
 });
 
-exports.modules = app;
+module.exports = app;
