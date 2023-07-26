@@ -14,19 +14,19 @@ const router = express.Router();
 router.get(
   '/users',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin'),
+  AuthMiddleware.restrictTo('admin'),
   userController.getAllUsers
 );
 router.put(
   '/',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin', 'user'),
+  AuthMiddleware.restrictTo('admin', 'user'),
   userController.updateUserProfile
 );
 router.put(
   '/cook/',
   AuthMiddleware.protectRoute,
-  AuthMiddleware.ristrictTo('admin', 'cook'),
+  AuthMiddleware.restrictTo('admin', 'cook'),
   userController.updateCookProfile
 );
 

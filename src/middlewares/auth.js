@@ -31,9 +31,9 @@ const protectRoute = async (req, res, next) => {
   }
 };
 
-// ********************************************** Authoraization ristrictTo controller
+// ********************************************** Authoraization restrictTo controller
 
-const ristrictTo =
+const restrictTo =
   (...type) =>
   (req, res, next) => {
     if (!type.includes(req.user.type)) {
@@ -46,5 +46,5 @@ const ristrictTo =
 
 module.exports = {
   protectRoute,
-  ristrictTo,
+  restrictTo,
 };
