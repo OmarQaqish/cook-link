@@ -83,11 +83,13 @@ const deleteMyAccount = async (req, res) => {
       user: new mongoose.Types.ObjectId(userId),
     });
     await User.findByIdAndDelete(userId);
+    res.cookie('jwt', '', { expires: new Date(0), httpOnly: true });
     res.status(200).send('account deleted successfully');
   } catch (err) {
     res.status(501).send({ message: `internal server error: ${err}` });
   }
 };
+
 const updateUserProfile = async (req, res) => {
   try {
     const {

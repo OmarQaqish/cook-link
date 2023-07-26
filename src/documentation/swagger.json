@@ -64,7 +64,7 @@
           },
           "address": {
             "type": "string",
-            "format": "uuid"
+            "format": "ObjectId"
           },
           "profilePicture": {
             "type": "string"
@@ -88,7 +88,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "format": "uuid"
+              "format": "ObjectId"
             }
           }
         },
@@ -163,11 +163,11 @@
         "properties": {
           "user": {
             "type": "string",
-            "format": "uuid"
+            "format": "ObjectId"
           },
           "dish": {
             "type": "string",
-            "format": "uuid"
+            "format": "ObjectId"
           },
           "quantity": {
             "type": "number",
@@ -232,7 +232,7 @@
           },
           "user": {
             "type": "string",
-            "format": "uuid"
+            "format": "ObjectId"
           },
           "status": {
             "type": "string",
@@ -584,6 +584,234 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/user/users": {
+      "get": {
+        "summary": "Get all users",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "summary": "Get authenticated user's profile",
+        "operationId": "getMyInfo",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "username": "string",
+                  "firstName": "string",
+                  "lastName": "string",
+                  "email": "user@example.com",
+                  "address": {
+                    "street": "string",
+                    "buildingNumber": 0,
+                    "apartmentNumber": 0,
+                    "neighborhood": "string",
+                    "district": "string",
+                    "city": "string",
+                    "country": "string",
+                    "postalCode": 0
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update authenticated user's profile",
+        "operationId": "updateUserProfile",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete authenticated user's account",
+        "operationId": "deleteMyAccount",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Account deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/user/cook": {
+      "put": {
+        "summary": "Update cook profile",
+        "tags": ["User"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cook profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/user/cook-page/{cookId}": {
+      "get": {
+        "summary": "Get cook's public page by ID",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "cookId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "User ID of the cook"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "firstName": "string",
+                  "lastName": "string",
+                  "profilePicture": "string",
+                  "location": "string",
+                  "bio": "string",
+                  "dishes": [
+                    {
+                      "name": "string",
+                      "description": "string",
+                      "cuisine": "string",
+                      "image": "string",
+                      "price": 0
+                    },
+                    {
+                      "name": "string",
+                      "description": "string",
+                      "cuisine": "string",
+                      "image": "string",
+                      "price": 0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Cook not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
