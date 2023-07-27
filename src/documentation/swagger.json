@@ -876,7 +876,7 @@
               "type": "string",
               "format": "ObjectId"
             },
-            "description": "Address ID"
+            "description": "ID of the address to be retrieved"
           }
         ],
         "responses": {
@@ -915,7 +915,7 @@
               "type": "string",
               "format": "ObjectId"
             },
-            "description": "Address ID"
+            "description": "ID of the address to be updated"
           }
         ],
         "requestBody": {
@@ -976,6 +976,41 @@
           },
           "404": {
             "description": "Address not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/address/addresses": {
+      "get": {
+        "summary": "Retrieves all addresses (restricted to admins)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Address"],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved addresses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Address"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Failed to fetch addresses"
           },
           "500": {
             "description": "Internal server error"

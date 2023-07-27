@@ -5,13 +5,13 @@ const authMiddleware = require('../middlewares/auth');
 const router = express.Router();
 
 router.post('/', authMiddleware.protectRoute, addressController.addAddress);
-router.get('/:id', authMiddleware.protectRoute, addressController.getAddress);
 router.get(
-  '/',
+  '/addresses',
   authMiddleware.protectRoute,
   authMiddleware.restrictTo('admin'),
   addressController.getAllAddresses
 );
+router.get('/:id', authMiddleware.protectRoute, addressController.getAddress);
 router.put(
   '/:id',
   authMiddleware.protectRoute,
