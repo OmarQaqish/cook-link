@@ -900,6 +900,55 @@
             "description": "Internal server error"
           }
         }
+      },
+      "put": {
+        "summary": "Update authenticated user's address",
+        "operationId": "updateAddress",
+        "tags": ["Address"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "Address ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Address updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Address not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
       }
     }
   }
