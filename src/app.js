@@ -32,14 +32,15 @@ app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/dish', dishRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/auth', googleAuthRoutes);
+app.use('/api/socialAuth', googleAuthRoutes);
 app.use('/api/address', addressRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(process.env.NODE_LOCAL_PORT, () => {
+app.listen(process.env.NODE_LOCAL_PORT, async () => {
   console.log(`server listening on port:${process.env.NODE_LOCAL_PORT}`);
 
-  connectToMongo();
+  await connectToMongo();
+  app.emit('appStarted');
 });
 
-exports.modules = app;
+module.exports = app;
