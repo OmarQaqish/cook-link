@@ -590,7 +590,7 @@
     },
     "/api/user/users": {
       "get": {
-        "summary": "Get all users",
+        "summary": "Get all users (Admins Only)",
         "tags": ["User"],
         "security": [{ "bearerAuth": [] }],
         "responses": {
@@ -985,7 +985,7 @@
     },
     "/api/address/addresses": {
       "get": {
-        "summary": "Retrieves all addresses (restricted to admins)",
+        "summary": "Retrieves all addresses (Admins Only)",
         "security": [
           {
             "bearerAuth": []
@@ -1056,7 +1056,7 @@
       "post": {
         "tags": ["Dish"],
         "operationId": "addDish",
-        "summary": "Allow a cook to add a new dish",
+        "summary": "Add a new dish (Cooks Only)",
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
@@ -1334,6 +1334,277 @@
               "application/json": {
                 "example": {
                   "error": "Failed to delete dish"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dish/admin": {
+      "get": {
+        "tags": ["Dish"],
+        "operationId": "getAllDishes",
+        "summary": "Get all dishes (Admins Only)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "admin" },
+                    "dishes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dish"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "admin",
+                  "dishes": [
+                    {
+                      "_id": "string",
+                      "name": "string",
+                      "description": "string",
+                      "cuisine": "string",
+                      "image": "string",
+                      "price": 0,
+                      "createdAt": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "You do not have permission to to perform this action"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Failed to fetch dishes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dish/same-city": {
+      "get": {
+        "tags": ["Dish"],
+        "operationId": "getDishesSameCity",
+        "summary": "Get dishes available in the same city (Customers and Cooks Only)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "customer" },
+                    "dishes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dish"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "message": "customer",
+                      "dishes": [
+                        {
+                          "_id": "string",
+                          "name": "string",
+                          "description": "string",
+                          "cuisine": "string",
+                          "image": "string",
+                          "price": 0,
+                          "createdAt": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "noDishes": {
+                    "value": {
+                      "message": "No dishes in your city"
+                    }
+                  },
+                  "noAddress": {
+                    "value": {
+                      "message": "Please Add your address to get dishes in your city"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "You do not have permission to to perform this action"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Failed to fetch dishes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dish/mydishes": {
+      "get": {
+        "tags": ["Dish"],
+        "operationId": "getMyDishes",
+        "summary": "Get dishes created by the logged-in cook",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dish"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "description": "A message when there are no dishes"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "myDishes": {
+                    "value": [
+                      {
+                        "_id": "string",
+                        "name": "string",
+                        "description": "string",
+                        "cuisine": "string",
+                        "image": "string",
+                        "price": 0,
+                        "createdAt": "string"
+                      }
+                    ]
+                  },
+                  "noDishes": {
+                    "value": {
+                      "message": "You have no dishes yet"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "You do not have permission to to perform this action"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Failed to fetch dishes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dish/filter": {
+      "get": {
+        "tags": ["Dish"],
+        "operationId": "filterDish",
+        "summary": "Filter dishes by cuisine",
+        "parameters": [
+          {
+            "name": "cuisine",
+            "in": "query",
+            "description": "The cuisine to filter dishes by",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["Turkish", "Syrian", "Iraqi", "Other"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dish"
+                  }
+                },
+                "example": [
+                  {
+                    "_id": "string",
+                    "name": "string",
+                    "description": "string",
+                    "cuisine": "string",
+                    "image": "string",
+                    "price": 0,
+                    "createdAt": "string"
+                  }
+                ]
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Failed to filter dishes"
                 }
               }
             }
