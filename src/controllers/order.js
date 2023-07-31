@@ -32,6 +32,21 @@ const getOrder = async (req, res) => {
   }
 };
 
+const getMyOrders = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const orders = await Order.find({ user: userId });
+
+    if (!orders) {
+      return res.status(404).json({ message: 'You do not have any orders' });
+    }
+
+    return res.status(200).json(orders);
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+};
+
 const getCookAssignedOrders = async (req, res) => {
   try {
     const assignedOrders = await Order.aggregate([
@@ -161,6 +176,7 @@ const payment = async (req, res) => {
 module.exports = {
   getAllOrders,
   getOrder,
+  getMyOrders,
   updateOrderStatus,
   getCookAssignedOrders,
   payment,

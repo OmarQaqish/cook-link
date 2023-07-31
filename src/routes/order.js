@@ -11,12 +11,12 @@ router.get(
   orderController.getAllOrders
 );
 
-// router.get(
-//   '/myorders',
-//   AuthMiddleware.protectRoute,
-//   AuthMiddleware.restrictTo('user', 'admin'),
-//   orderController.getMyOrders
-// );
+router.get(
+  '/myorders',
+  AuthMiddleware.protectRoute,
+  AuthMiddleware.restrictTo('user'),
+  orderController.getMyOrders
+);
 
 router.get(
   '/assigned-orders',
