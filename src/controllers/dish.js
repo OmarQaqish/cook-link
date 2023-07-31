@@ -74,7 +74,7 @@ const addDish = async (req, res) => {
 
 const filterDish = async (req, res) => {
   try {
-    const { cuisine } = req.body;
+    const { cuisine } = req.query;
     const filteredDishes = await Dish.find({ cuisine });
 
     return res.status(200).json({ dishes: filteredDishes });
