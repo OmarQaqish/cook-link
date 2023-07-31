@@ -21,7 +21,7 @@ describe('main', () => {
     });
   });
 
-  it('GET/ get cart', (done) => {
+  it('get all dishes from the cart', (done) => {
     request(app)
       .get('/api/cart')
       .set('Cookie', `jwt=${token}`)
@@ -37,29 +37,94 @@ describe('main', () => {
           done();
         },
         (err) => {
-          console.log(err);
+          done(err);
         }
       );
   });
 
-  it('POST/ checkout cart ', (done) => {
+  it('add a dish to the cart', (done) => {
     request(app)
-      .post('/api/cart/checkout')
+      .post('/api/cart/64bfe91f5a7ef74c61c59749')
       .set('Cookie', `jwt=${token}`)
+      .send({ quantity: 7 })
       .expect('Content-Type', /json/)
       .expect(201)
       .then(
         (res) => {
           expect(typeof res.body).toBe('object');
-          expect(res.body).toHaveProperty('message');
-          expect(res.body.message).toBe('Order placed successfully');
-          expect(res.body).toHaveProperty('order');
-          expect(typeof res.body.order).toBe('object');
+          expect(res.body).toHaveProperty('user');
+          expect(typeof res.body.user).toBe('string');
+          expect(res.body).toHaveProperty('quantity');
+          expect(typeof res.body.quantity).toBe('number');
           done();
         },
         (err) => {
-          console.log(err);
+          done(err);
         }
       );
+  });
+
+  describe('checkout, remove cart', () => {
+    beforeEach((done) => {
+      request(app)
+        .post('/api/cart/64bfe91f5a7ef74c61c59749')
+        .set('Cookie', `jwt=${token}`)
+        .send({ quantity: 7 })
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .then(
+          (res) => {
+            expect(typeof res.body).toBe('object');
+            expect(res.body).toHaveProperty('user');
+            expect(typeof res.body.user).toBe('string');
+            expect(res.body).toHaveProperty('quantity');
+            expect(typeof res.body.quantity).toBe('number');
+            done();
+          },
+          (err) => {
+            done(err);
+          }
+        );
+    });
+
+    it('checkout cart ', (done) => {
+      request(app)
+        .post('/api/cart/checkout')
+        .set('Cookie', `jwt=${token}`)
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .then(
+          (res) => {
+            expect(typeof res.body).toBe('object');
+            expect(res.body).toHaveProperty('message');
+            expect(res.body.message).toBe('Order placed successfully');
+            expect(res.body).toHaveProperty('order');
+            expect(typeof res.body.order).toBe('object');
+            done();
+          },
+          (err) => {
+            done(err);
+          }
+        );
+    });
+
+    it('remove dish from the cart ', (done) => {
+      request(app)
+        .delete(`/api/cart/64bfe91f5a7ef74c61c59749`)
+        .set('Cookie', `jwt=${token}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then(
+          (res) => {
+            expect(typeof res.body).toBe('object');
+            expect(res.body).toHaveProperty('message');
+            expect(res.body.message).toBe('Item removed from the cart');
+            done();
+          },
+          (err) => {
+            done(err);
+          }
+        );
+    });
   });
 });
