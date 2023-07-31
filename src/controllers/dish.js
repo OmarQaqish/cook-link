@@ -23,7 +23,7 @@ const getDishesSameCity = async (req, res) => {
       type: 'cook',
     }).populate('address');
     const dishesId = cooks
-      .filter((cook) => cook.address.city === user.address.city)
+      .filter((cook) => cook.address && cook.address.city === user.address.city)
       .map((cook) => cook.dishes)
       .flat();
     const dishes = await Dish.find({
