@@ -32,7 +32,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/dish', dishRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/socialAuth', googleAuthRoutes);
+app.use('/api/auth', googleAuthRoutes);
 app.use('/api/address', addressRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
