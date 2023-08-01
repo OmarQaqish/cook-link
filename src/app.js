@@ -36,10 +36,11 @@ app.use('/api/auth', googleAuthRoutes);
 app.use('/api/address', addressRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(process.env.NODE_LOCAL_PORT, () => {
+app.listen(process.env.NODE_LOCAL_PORT, async () => {
   console.log(`server listening on port:${process.env.NODE_LOCAL_PORT}`);
 
-  connectToMongo();
+  await connectToMongo();
+  app.emit('appStarted');
 });
 
 module.exports = app;
