@@ -12,6 +12,13 @@ router.get(
 );
 
 router.get(
+  '/myorders',
+  AuthMiddleware.protectRoute,
+  AuthMiddleware.restrictTo('user'),
+  orderController.getMyOrders
+);
+
+router.get(
   '/assigned-orders',
   AuthMiddleware.protectRoute,
   AuthMiddleware.restrictTo('cook'),
@@ -23,6 +30,13 @@ router.post(
   AuthMiddleware.protectRoute,
   AuthMiddleware.restrictTo('user'),
   orderController.payment
+);
+
+router.get(
+  '/:orderId',
+  AuthMiddleware.protectRoute,
+  AuthMiddleware.restrictTo('user', 'admin'),
+  orderController.getOrder
 );
 
 router.put(

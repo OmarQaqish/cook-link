@@ -1,10 +1,48 @@
 const Order = require('../models/order');
+const User = require('../models/user');
 
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find();
     return res.status(200).json(orders);
   } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+};
+
+const getOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (user.type !== 'admin' && order.user.toString() !== user.id) {
+      return res
+        .status(401)
+        .json({ message: 'You are not authorized to view this order' });
+    }
+
+    return res.status(200).json(order);
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch order' });
+  }
+};
+
+const getMyOrders = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const orders = await Order.find({ user: userId });
+
+    if (!orders) {
+      return res.status(404).json({ message: 'You do not have any orders' });
+    }
+
+    return res.status(200).json(orders);
+  } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch orders' });
   }
 };
@@ -137,6 +175,8 @@ const payment = async (req, res) => {
 
 module.exports = {
   getAllOrders,
+  getOrder,
+  getMyOrders,
   updateOrderStatus,
   getCookAssignedOrders,
   payment,
