@@ -20,6 +20,7 @@
     "class-methods-use-this": "off",
     "no-underscore-dangle": "off",
     "node/no-unsupported-features/es-syntax": "off",
-    "node/no-unpublished-require": "off"
+    "node/no-unpublished-require": "off",
+    "arrow-body-style": "off"
   }
 }
