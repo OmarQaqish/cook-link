@@ -1,24 +1,33 @@
 const request = require('supertest');
-const app = require('../../app');
+const { app, appListen } = require('../../app');
+
+const signIn = async (email, password) => {
+  return request(app)
+    .post('/api/auth/signin')
+    .send(`email=${email}&password=${password}`)
+    .expect('Content-Type', /json/)
+    .expect(201)
+    .then((res) => res.body.JWTtoken);
+};
 
 describe('main', () => {
   const email = process.env.TEST_EMAIL_USER;
   const password = process.env.TEST_PASSWORD_USER;
 
   let token = '';
+  let server = null;
 
   beforeAll((done) => {
-    app.on('appStarted', () => {
-      request(app)
-        .post('/api/auth/signin')
-        .send(`email=${email}&password=${password}`)
-        .expect('Content-Type', /json/)
-        .expect(201)
-        .then((res) => {
-          token = res.body.JWTtoken;
-          done();
-        });
+    server = app.listen(process.env.NODE_LOCAL_PORT, appListen);
+
+    app.on('appStarted', async () => {
+      token = await signIn(email, password);
+      done();
     });
+  });
+
+  afterAll((done) => {
+    server.close(done);
   });
 
   it('get all dishes from the cart', (done) => {
