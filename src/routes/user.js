@@ -24,7 +24,7 @@ router.put(
   userController.updateUserProfile
 );
 router.put(
-  '/cook/',
+  '/cook',
   AuthMiddleware.protectRoute,
   AuthMiddleware.restrictTo('admin', 'cook'),
   userController.updateCookProfile
