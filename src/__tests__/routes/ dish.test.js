@@ -15,24 +15,27 @@ const signIn = async (email, password) => {
 };
 
 describe('dish main', () => {
+  let token = '';
+  let server = null;
+
+  beforeAll((done) => {
+    server = app.listen(process.env.NODE_LOCAL_PORT, appListen);
+
+    app.on('appStarted', () => {
+      done();
+    });
+  });
+
+  afterAll((done) => {
+    server.close(done);
+  });
+
   describe('tests for admin', () => {
     const email = process.env.TEST_EMAIL_ADMIN;
     const password = process.env.TEST_PASSWORD_ADMIN;
 
-    let token = '';
-    let server = null;
-
-    beforeAll((done) => {
-      server = app.listen(process.env.NODE_LOCAL_PORT, appListen);
-
-      app.on('appStarted', async () => {
-        token = await signIn(email, password);
-        done();
-      });
-    });
-
-    afterAll((done) => {
-      server.close(done);
+    beforeAll(async () => {
+      token = await signIn(email, password);
     });
 
     it('get all admin dishes', (done) => {
@@ -63,21 +66,10 @@ describe('dish main', () => {
     const email = process.env.TEST_EMAIL_COOK;
     const password = process.env.TEST_PASSWORD_COOK;
 
-    let token = '';
-    let server = null;
     let addedDishId = null;
 
-    beforeAll((done) => {
-      server = app.listen(process.env.NODE_LOCAL_PORT, appListen);
-
-      app.on('appStarted', async () => {
-        token = await signIn(email, password);
-        done();
-      });
-    });
-
-    afterAll((done) => {
-      server.close(done);
+    beforeAll(async () => {
+      token = await signIn(email, password);
     });
 
     it('get cook own dishes', (done) => {
@@ -213,21 +205,10 @@ describe('dish main', () => {
     const email = process.env.TEST_EMAIL_USER;
     const password = process.env.TEST_PASSWORD_USER;
 
-    let token = '';
-    let server = null;
     const addedDishId = 'thisisaplaceholder';
 
-    beforeAll((done) => {
-      server = app.listen(process.env.NODE_LOCAL_PORT, appListen);
-
-      app.on('appStarted', async () => {
-        token = await signIn(email, password);
-        done();
-      });
-    });
-
-    afterAll((done) => {
-      server.close(done);
+    beforeAll(async () => {
+      token = await signIn(email, password);
     });
 
     it('get user try to get a cook dishes', (done) => {
@@ -378,20 +359,6 @@ describe('dish main', () => {
   });
 
   describe('dish public routes', () => {
-    let server = null;
-
-    beforeAll((done) => {
-      server = app.listen(process.env.NODE_LOCAL_PORT, appListen);
-
-      app.on('appStarted', () => {
-        done();
-      });
-    });
-
-    afterAll((done) => {
-      server.close(done);
-    });
-
     it('get dishes as a guest', (done) => {
       request(app)
         .get('/api/dish')
