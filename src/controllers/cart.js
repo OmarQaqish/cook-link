@@ -145,6 +145,8 @@ const checkout = async (req, res) => {
 
     await order.save();
 
+    await Cart.deleteMany({ user: userId });
+
     return res
       .status(201)
       .json({ message: 'Order placed successfully', order });
