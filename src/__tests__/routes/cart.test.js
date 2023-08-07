@@ -1,5 +1,9 @@
 const request = require('supertest');
+const path = require('path');
 const { app, appListen } = require('../../app');
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../../.env.test.local'),
+});
 
 const signIn = async (email, password) => {
   return request(app)

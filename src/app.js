@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./documentation/swagger.json');
 const connectToMongo = require('./db/connection');
