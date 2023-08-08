@@ -1,10 +1,10 @@
 const request = require('supertest');
 const path = require('path');
-const { app, appListen } = require('../../app');
-const User = require('../../models/user');
 require('dotenv').config({
   path: path.resolve(__dirname, '../../../.env.test.local'),
 });
+const { app, appListen } = require('../../app');
+const User = require('../../models/user');
 
 const signIn = async (email, password) => {
   return request(app)
