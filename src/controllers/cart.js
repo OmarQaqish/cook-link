@@ -95,7 +95,7 @@ const decreaseItemQuantity = async (req, res) => {
       return res.status(404).json({ error: 'Cart item not found' });
     }
 
-    if (cartItem.quantity === 0) {
+    if (cartItem.quantity === 1) {
       return res.status(400).json({ error: 'Quantity cannot decreased' });
     }
 
