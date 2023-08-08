@@ -16,18 +16,6 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
-      },
-      "GoogleOAuth": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "http://localhost:3000/api/auth/google",
-            "tokenUrl": "https://accounts.google.com/o/oauth2/token",
-            "scopes": {
-              "https://www.googleapis.com/auth/userinfo.profile": "All user operations requiring authentication."
-            }
-          }
-        }
       }
     },
     "schemas": {
@@ -273,7 +261,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success - Successfully signed in",
             "content": {
               "application/json": {
@@ -312,7 +300,7 @@
               }
             }
           },
-          "500": {
+          "501": {
             "description": "Internal server error",
             "content": {
               "application/json": {
@@ -412,7 +400,7 @@
               }
             }
           },
-          "500": {
+          "501": {
             "description": "Internal server error",
             "content": {
               "application/json": {
