@@ -34,6 +34,14 @@ This API uses several packages and libraries, chief among them are:
 
 ### Diagrams
 
+#### API Endpoints Diagram
+
+<img src="https://i.imgur.com/DPO5V39.jpg" alt="Database Diagram" width="1000"/>
+
+#### Database Diagram
+
+<img src="https://i.imgur.com/ir4wF0v.jpg" alt="Database Diagram" width="1000"/>
+
 ### Functionality
 
 The API includes the following key functionality:
