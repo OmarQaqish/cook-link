@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./documentation/swagger.json');
 const connectToMongo = require('./db/connection');
@@ -15,6 +16,22 @@ const AuthMiddleware = require('./middlewares/auth');
 const addressRoutes = require('./routes/address');
 
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+  res.render('homepage');
+});
+
+app.get('/signin', (req, res) => {
+  res.render('signin');
+});
+app.get('/signup', (req, res) => {
+  res.render('signup');
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
