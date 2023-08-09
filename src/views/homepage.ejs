@@ -1,35 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cook Link - Home</title>
-    <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cookLink - Home</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      header {
+        background-color: #007bff;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+      nav li {
+        margin: 0 15px;
+      }
+      nav a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+      }
+      nav a:hover {
+        color: #000000;
+      }
+      main {
+        background-color: #fff;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+      }
+      .intro {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .intro h2 {
+        color: #007bff;
+        margin-bottom: 10px;
+      }
+      .featured-recipes {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .featured-recipes h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      footer {
+        text-align: center;
+        background-color: #f4f4f4;
+        padding: 10px 0;
+        border-top: 1px solid #ccc;
+        color: #777;
+      }
+      footer a {
+        color: #777;
+        text-decoration: none;
+      }
+      footer a:hover {
+        color: #000000;
+      }
+      .authes {
+        color: #fff;
+        background-color: rgb(0, 0, 0);
+        padding: 12px;
+        border-radius: 30px;
+      }
+      .authes:hover {
+        color: #000000;
+        background-color: rgb(255, 255, 255);
+      }
+    </style>
+  </head>
+  <body>
     <header>
-        <h1>Cook Link</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/signin">Signin</a></li>
-                <li><a href="/recipes">Recipes</a></li>
-                <li><a href="/about">About</a></li>
-            </ul>
-        </nav>
+      <h1>cookLink</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/recipes">Recipes</a></li>
+          <li style="margin-right: 100px"><a href="/about">About</a></li>
+          <% if (user) { %>
+          <li>Welcome, <%= user.firstName %></li>
+          <li>
+            <a href="/api/auth/signout" class="authes">Sign out</a>
+          </li>
+          <% } else { %>
+          <li><a href="/signin" class="authes">Sign in</a></li>
+          <li><a href="/signup" class="authes">Sign up</a></li>
+          <% } %>
+        </ul>
+      </nav>
     </header>
     <main>
-        <section class="intro">
-            <h2>Welcome to Cook Link!</h2>
-            <p>Step into a world of delicious recipes and kitchen tips.</p>
-        </section>
-        <section class="featured-recipes">
-            <h2>Featured Recipes</h2>
-            <!-- Featured recipes listing code can go here -->
-        </section>
+      <section class="intro">
+        <h2>Welcome to cookLink!</h2>
+        <p>Step into a world of delicious recipes and kitchen tips.</p>
+      </section>
+      <section class="featured-recipes">
+        <h2>Featured Recipes</h2>
+        <!-- Featured recipes listing code can go here -->
+      </section>
     </main>
     <footer>
-        <p>&copy; 2023 Cook Link. All rights reserved.</p>
+      <p>&copy; 2023 cookLink. All rights reserved.</p>
     </footer>
-</body>
+  </body>
 </html>
