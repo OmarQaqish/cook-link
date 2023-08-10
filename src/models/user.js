@@ -112,6 +112,7 @@ userSchema.methods.generateAuthToken = function () {
   const payload = {
     id: this.id,
     username: this.username,
+    firstName: this.firstName,
   };
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,

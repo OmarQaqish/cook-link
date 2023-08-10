@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./documentation/swagger.json');
 const connectToMongo = require('./db/connection');
@@ -16,10 +18,39 @@ const addressRoutes = require('./routes/address');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+// Frontend routes
+app.get('/', (req, res) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    res.render('homepage', { user });
+  } else {
+    res.render('homepage', { user: null }); // No token, user not authenticated
+  }
+});
+
+app.get('/signin', (req, res) => {
+  res.render('signin');
+});
+
+app.get('/signup', (req, res) => {
+  res.render('signup');
+});
+
+app.get('/signout', (req, res) => {
+  res.redirect('/api/auth/signout');
+});
+
+// API routes
 app.use(
   '/api/cart',
   AuthMiddleware.protectRoute,
